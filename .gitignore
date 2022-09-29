@@ -31,5 +31,7 @@
 *.out
 *.app
 
+# ODR Files
 .DS_Store
 build
+OpenDesignRenderer/test/image-files/tmp*

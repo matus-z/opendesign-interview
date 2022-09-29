@@ -1,7 +1,6 @@
 #include <memory>
 #include <gtest/gtest.h>
 
-#include <OpenDesignRenderer/Image.h>
 #include <OpenDesignRenderer/RenderingEngine.h>
 
 
@@ -13,8 +12,4 @@ protected:
 };
 
 TEST_F(RenderingEngineTests, RenderingEngineTests_EQ) {
-    odr::Image img;
-    odr::RenderingEngine engine;
-
-    EXPECT_EQ(10, 10);
 }

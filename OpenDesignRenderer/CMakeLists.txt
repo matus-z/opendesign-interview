@@ -8,6 +8,9 @@ enable_testing()
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRS})
 
+# Define a value for testing images directory
+add_definitions(-DTESTING_IMAGES_DIR="${CMAKE_SOURCE_DIR}/test/image-files/")
+
 # Project source files
 set(PROJECT_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/Image.cpp
@@ -17,6 +20,7 @@ set(PROJECT_SOURCE_FILES
 # Test source files
 set(TEST_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/test/main.cpp
+    ${CMAKE_SOURCE_DIR}/test/ImageTests.cpp
     ${CMAKE_SOURCE_DIR}/test/RenderingEngineTests.cpp
 )
 
@@ -34,8 +38,7 @@ target_include_directories(${TEST_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include/)
 add_test(${TEST_NAME} ${TEST_NAME})
 
 add_definitions(
-    -D_USE_MATH_DEFINES
-    -D_SILENCE_ALL_CXX17_DEPRECATION_WARNINGS)
+    -D_USE_MATH_DEFINES)
 
 set_target_properties(${TEST_NAME} PROPERTIES
     CXX_STANDARD 17
