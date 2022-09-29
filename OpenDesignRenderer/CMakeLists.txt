@@ -14,6 +14,9 @@ add_definitions(-DTESTING_IMAGES_DIR="${CMAKE_SOURCE_DIR}/test/image-files/")
 # Project source files
 set(PROJECT_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/Image.cpp
+    ${CMAKE_SOURCE_DIR}/src/ImageDimensions.cpp
+    ${CMAKE_SOURCE_DIR}/src/PixelColor.cpp
+    ${CMAKE_SOURCE_DIR}/src/PixelCoordinates.cpp
     ${CMAKE_SOURCE_DIR}/src/RenderingEngine.cpp
 )
 
