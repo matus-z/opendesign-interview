@@ -122,13 +122,12 @@ TEST_F(ImageTests, SetColor) {
     }
 }
 
-TEST_F(ImageTests, Initialize) {
+TEST_F(ImageTests, InitializeWithColor) {
     odr::Image imgLightGreen;
 
-    const odr::PixelColor lightGreen{ 1894805632 };
     const odr::ImageDimensions dimensions{ 60, 40 };
 
-    const bool isInitialized = imgLightGreen.Initialize(dimensions, lightGreen);
+    const bool isInitialized = imgLightGreen.Initialize(dimensions, odr::COLOR_LIGHT_GREEN);
     ASSERT_TRUE(isInitialized);
 
     ASSERT_EQ(imgLightGreen.GetDimensions(), dimensions);
@@ -138,7 +137,21 @@ TEST_F(ImageTests, Initialize) {
             const odr::PixelCoordinates PixelCoordinates {left, top};
             const odr::PixelColor pixelColor = imgLightGreen.GetColor(PixelCoordinates);
 
-            ASSERT_EQ(pixelColor, lightGreen);
+            ASSERT_EQ(pixelColor, odr::COLOR_LIGHT_GREEN);
         }
     }
+}
+
+TEST_F(ImageTests, InitializeAsCopy) {
+    odr::Image imgA;
+
+    const bool isImgALoaded = imgA.Load(std::string(TESTING_IMAGES_DIR) + "image-A.rgba");
+    ASSERT_TRUE(isImgALoaded);
+
+    odr::Image imgACopy;
+
+    const bool isCopied = imgACopy.Initialize(imgA);
+    ASSERT_TRUE(isCopied);
+
+    ASSERT_EQ(imgA, imgACopy);
 }

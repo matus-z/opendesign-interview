@@ -3,6 +3,7 @@
 #include <sstream>
 #include <iostream>
 #include <fstream>
+#include <cmath>
 
 #include <OpenDesignRenderer/PixelCoordinates.h>
 #include <OpenDesignRenderer/PixelColor.h>
@@ -23,17 +24,15 @@ namespace {
 unsigned char * rgba_encode_bitmap_to_file_data(
     const unsigned char * input_buffer,
     uint32_t width,
-    uint32_t height,
-    uint32_t * p_output_size)
+    uint32_t height)
 {
-    if (!input_buffer || !p_output_size || width == 0 || height == 0) {
+    if (!input_buffer || width == 0 || height == 0) {
         return nullptr;
     }
 
-    *p_output_size = 0;
-
     const uint32_t imageDataSize = width * height * 4;
     const uint32_t output_size = 12 + imageDataSize;
+
     unsigned char * rgba_file = (unsigned char*)malloc(output_size);
     if (!rgba_file) {
         return nullptr;
@@ -45,7 +44,6 @@ unsigned char * rgba_encode_bitmap_to_file_data(
 
     memcpy(&rgba_file[12], input_buffer, imageDataSize);
 
-    *p_output_size = output_size;
     return rgba_file;
 }
 
@@ -53,14 +51,11 @@ unsigned char * rgba_decode_file_data_to_bitmap(
     const unsigned char * file_data,
     uint32_t file_data_length,
     uint32_t * p_width,
-    uint32_t * p_height,
-    uint32_t * p_output_size)
+    uint32_t * p_height)
 {
-    if (!file_data || !p_width || !p_height || !p_output_size) {
+    if (!file_data || !p_width || !p_height) {
         return nullptr;
     }
-
-    *p_output_size = 0;
 
     if (file_data_length < 12) {
         return nullptr;
@@ -89,7 +84,6 @@ unsigned char * rgba_decode_file_data_to_bitmap(
 
     *p_width = width;
     *p_height = height;
-    *p_output_size = imageDataSize;
 
     return bitmap;
 }
@@ -114,13 +108,22 @@ bool odr::Image::IsInitialized() const {
         imageBuffer != nullptr;
 }
 
-bool odr::Image::Initialize(const ImageDimensions& dimensions_, const PixelColor& color) {
+void odr::Image::Clear() {
+    dimensions.width = 0;
+    dimensions.height = 0;
+
     if (imageBuffer != nullptr) {
         free(imageBuffer);
+        imageBuffer = nullptr;
     }
+}
+
+bool odr::Image::Initialize(const ImageDimensions& dimensions_, const PixelColor& color) {
+    Clear();
 
     imageBuffer = (unsigned char*)malloc(dimensions_.DataSize());
-    if (!imageBuffer) {
+    if (imageBuffer == nullptr) {
+        Clear();
         return false;
     }
 
@@ -132,14 +135,27 @@ bool odr::Image::Initialize(const ImageDimensions& dimensions_, const PixelColor
             const bool isSet = SetColor(color, PixelCoordinates);
 
             if (!isSet) {
-                dimensions.width = 0;
-                dimensions.height = 0;
-                delete[] imageBuffer;
-
+                Clear();
                 return false;
             }
         }
     }
+
+    return true;
+}
+
+bool odr::Image::Initialize(const Image& otherImage) {
+    Clear();
+
+    dimensions = otherImage.GetDimensions();
+
+    imageBuffer = (unsigned char*)malloc(dimensions.DataSize());
+    if (imageBuffer == nullptr) {
+        Clear();
+        return false;
+    }
+
+    memcpy(otherImage.imageBuffer, imageBuffer, dimensions.DataSize());
 
     return true;
 }
@@ -158,8 +174,7 @@ bool odr::Image::Load(const std::string& filepath) {
     const char* sscstr = str.c_str();
     const unsigned char* usstr = reinterpret_cast<const unsigned char*>(const_cast<char*>(sscstr));
 
-    uint32_t imageDataSize = 0;
-    imageBuffer = rgba_decode_file_data_to_bitmap(usstr, str.size(), &dimensions.width, &dimensions.height, &imageDataSize);
+    imageBuffer = rgba_decode_file_data_to_bitmap(usstr, str.size(), &dimensions.width, &dimensions.height);
 
     return
         dimensions.width > 0 &&
@@ -172,19 +187,17 @@ bool odr::Image::Save(const std::string& filePath) const {
         return false;
     }
 
-    uint32_t outputSize = 0;
-    const unsigned char* encodedData = rgba_encode_bitmap_to_file_data(imageBuffer, dimensions.width, dimensions.height, &outputSize);
-
+    const unsigned char* encodedData = rgba_encode_bitmap_to_file_data(imageBuffer, dimensions.width, dimensions.height);
     if (encodedData == nullptr) {
         return false;
     }
 
     std::ofstream file(filePath, std::ios::out | std::ios::binary);
-
     if (!file.is_open()) {
         return false;
     }
 
+    const uint32_t outputSize = 12 + dimensions.DataSize();
     const char* encd = reinterpret_cast<char*>(const_cast<unsigned char*>(encodedData));
     file.write(encd, outputSize);
 
