@@ -176,6 +176,11 @@ bool odr::Image::operator==(const Image& other) const {
 odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
     Image scaledImage;
 
+    if (dimensions == newDimensions) {
+        scaledImage.Initialize(*this);
+        return scaledImage;
+    }
+
     const bool isInitialized = scaledImage.Initialize(newDimensions, COLOR_TRANSPARENT);
     if (!isInitialized) {
         return scaledImage;
