@@ -167,3 +167,38 @@ bool odr::Image::operator==(const Image& other) const {
 
     return true;
 }
+
+odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
+    Image scaledImage;
+
+    const bool isInitialized = scaledImage.Initialize(newDimensions, TRANSPARENT_COLOR);
+    if (!isInitialized) {
+        return scaledImage;
+    }
+
+    const float scalingFactorX = static_cast<float>(newDimensions.width) / static_cast<float>(dimensions.width);
+    const float scalingFactorY = static_cast<float>(newDimensions.height) / static_cast<float>(dimensions.height);
+
+    // TODO: Use bilinear interpolation to resample instead of taking the nearest pixel color
+    for (uint32_t left = 0; left < newDimensions.width; left++) {
+        for (uint32_t top = 0; top < newDimensions.height; top++) {
+            const float oldXF = static_cast<float>(left) / scalingFactorX;
+            const float oldYF = static_cast<float>(top) / scalingFactorY;
+
+            const uint32_t oldX = static_cast<uint32_t>(std::round(oldXF));
+            const uint32_t oldY = static_cast<uint32_t>(std::round(oldYF));
+
+            const PixelCoordinates oldNearestPixelCoordinats{ oldX, oldY };
+
+            const PixelCoordinates newPixelCoordinates{ left, top };
+            const PixelColor newPixelColor = GetColor(oldNearestPixelCoordinats);
+
+            const bool isSet = scaledImage.SetColor(newPixelColor, newPixelCoordinates);
+            if (!isSet) {
+                return scaledImage;
+            }
+        }
+    }
+
+    return scaledImage;
+}

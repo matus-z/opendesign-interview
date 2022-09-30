@@ -46,6 +46,9 @@ public:
     //! Detect if another image is identical to this one.
     bool operator==(const Image& other) const;
 
+    //! Construct a new image that is the result of scaling this image to new dimensions.
+    Image Scaled(const ImageDimensions& newDimensions) const;
+
 private:
     //! Image dimensions - width and height.
     ImageDimensions dimensions;

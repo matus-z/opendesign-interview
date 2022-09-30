@@ -155,3 +155,43 @@ TEST_F(ImageTests, InitializeAsCopy) {
 
     ASSERT_EQ(imgA, imgACopy);
 }
+
+TEST_F(ImageTests, Scaled) {
+    odr::Image imgA;
+
+    const bool isImgALoaded = imgA.Load(std::string(TESTING_IMAGES_DIR) + "image-A.rgba");
+    ASSERT_TRUE(isImgALoaded);
+
+    // Downscaled to 150x200
+    {
+        const odr::ImageDimensions scaledDimensions{ 150, 200 };
+        const odr::Image imgAScaled = imgA.Scaled(scaledDimensions);
+
+        ASSERT_EQ(imgAScaled.GetDimensions(), scaledDimensions);
+
+        const bool isImgAScaledSaved = imgAScaled.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-A-scaled_150x200.rgba");
+        ASSERT_TRUE(isImgAScaledSaved);
+    }
+
+    // Upscaled to 1400x500
+    {
+        const odr::ImageDimensions scaledDimensions{ 1400, 500 };
+        const odr::Image imgAScaled = imgA.Scaled(scaledDimensions);
+
+        ASSERT_EQ(imgAScaled.GetDimensions(), scaledDimensions);
+
+        const bool isImgAScaledSaved = imgAScaled.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-A-scaled_1400x500.rgba");
+        ASSERT_TRUE(isImgAScaledSaved);
+    }
+
+    // Scaled to 300x1000
+    {
+        const odr::ImageDimensions scaledDimensions{ 300, 1000 };
+        const odr::Image imgAScaled = imgA.Scaled(scaledDimensions);
+
+        ASSERT_EQ(imgAScaled.GetDimensions(), scaledDimensions);
+
+        const bool isImgAScaledSaved = imgAScaled.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-A-scaled_300x1000.rgba");
+        ASSERT_TRUE(isImgAScaledSaved);
+    }
+}
