@@ -25,6 +25,7 @@ set(PROJECT_SOURCE_FILES
 set(TEST_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/test/main.cpp
     ${CMAKE_SOURCE_DIR}/test/ImageTests.cpp
+    ${CMAKE_SOURCE_DIR}/test/PixelColorTests.cpp
     ${CMAKE_SOURCE_DIR}/test/RenderingEngineTests.cpp
 )
 

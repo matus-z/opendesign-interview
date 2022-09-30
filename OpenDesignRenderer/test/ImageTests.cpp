@@ -6,6 +6,11 @@
 #include <OpenDesignRenderer/Image.h>
 
 
+namespace {
+constexpr odr::PixelColor COLOR_LIGHT_GREEN{ 0x70, 0xF0, 0x70, 0x80 };
+constexpr odr::PixelColor COLOR_DARK_GREEN{ 0x30, 0xF0, 0x30, 0x80 };
+}
+
 //! Image class tests.
 class ImageTests : public ::testing::Test {
 protected:
@@ -38,60 +43,40 @@ TEST_F(ImageTests, GetColor) {
     {
         const auto pixelColor = imgA.GetColor({0, 0});
 
-        const unsigned char r = pixelColor.R();
-        const unsigned char g = pixelColor.G();
-        const unsigned char b = pixelColor.B();
-        const unsigned char a = pixelColor.A();
-
-        ASSERT_EQ(r, 0xFF);
-        ASSERT_EQ(g, 0xFF);
-        ASSERT_EQ(b, 0xDA);
-        ASSERT_EQ(a, 0x00);
+        ASSERT_EQ(pixelColor.r, 0xFF);
+        ASSERT_EQ(pixelColor.g, 0xFF);
+        ASSERT_EQ(pixelColor.b, 0xDA);
+        ASSERT_EQ(pixelColor.a, 0x00);
     }
 
     // [1,0]
     {
         const auto pixelColor = imgA.GetColor({1, 0});
 
-        const unsigned char r = pixelColor.R();
-        const unsigned char g = pixelColor.G();
-        const unsigned char b = pixelColor.B();
-        const unsigned char a = pixelColor.A();
-
-        ASSERT_EQ(r, 0xFF);
-        ASSERT_EQ(g, 0xFF);
-        ASSERT_EQ(b, 0xF4);
-        ASSERT_EQ(a, 0x00);
+        ASSERT_EQ(pixelColor.r, 0xFF);
+        ASSERT_EQ(pixelColor.g, 0xFF);
+        ASSERT_EQ(pixelColor.b, 0xF4);
+        ASSERT_EQ(pixelColor.a, 0x00);
     }
 
     // [215, 170]
     {
         const auto pixelColor = imgA.GetColor({215, 170});
 
-        const unsigned char r = pixelColor.R();
-        const unsigned char g = pixelColor.G();
-        const unsigned char b = pixelColor.B();
-        const unsigned char a = pixelColor.A();
-
-        ASSERT_EQ(r, 0x11);
-        ASSERT_EQ(g, 0x01);
-        ASSERT_EQ(b, 0x0B);
-        ASSERT_EQ(a, 0xFF);
+        ASSERT_EQ(pixelColor.r, 0x11);
+        ASSERT_EQ(pixelColor.g, 0x01);
+        ASSERT_EQ(pixelColor.b, 0x0B);
+        ASSERT_EQ(pixelColor.a, 0xFF);
     }
 
     // [480, 150]
     {
         const auto pixelColor = imgA.GetColor({480, 150});
 
-        const unsigned char r = pixelColor.R();
-        const unsigned char g = pixelColor.G();
-        const unsigned char b = pixelColor.B();
-        const unsigned char a = pixelColor.A();
-
-        ASSERT_EQ(r, 0xE7);
-        ASSERT_EQ(g, 0xB4);
-        ASSERT_EQ(b, 0x99);
-        ASSERT_EQ(a, 0xFF);
+        ASSERT_EQ(pixelColor.r, 0xE7);
+        ASSERT_EQ(pixelColor.g, 0xB4);
+        ASSERT_EQ(pixelColor.b, 0x99);
+        ASSERT_EQ(pixelColor.a, 0xFF);
     }
 }
 
@@ -105,20 +90,15 @@ TEST_F(ImageTests, SetColor) {
     {
         const odr::PixelCoordinates PixelCoordinates {215, 170};
 
-        const bool isColorWritten = imgA.SetColor(odr::PixelColor{552607872}, PixelCoordinates);
+        const bool isColorWritten = imgA.SetColor(COLOR_DARK_GREEN, PixelCoordinates);
         ASSERT_TRUE(isColorWritten);
 
         const auto pixelColor = imgA.GetColor(PixelCoordinates);
 
-        const unsigned char r = pixelColor.R();
-        const unsigned char g = pixelColor.G();
-        const unsigned char b = pixelColor.B();
-        const unsigned char a = pixelColor.A();
-
-        ASSERT_EQ(r, 0x20);
-        ASSERT_EQ(g, 0xF0);
-        ASSERT_EQ(b, 0x20);
-        ASSERT_EQ(a, 0x80);
+        ASSERT_EQ(pixelColor.r, COLOR_DARK_GREEN.r);
+        ASSERT_EQ(pixelColor.g, COLOR_DARK_GREEN.g);
+        ASSERT_EQ(pixelColor.b, COLOR_DARK_GREEN.b);
+        ASSERT_EQ(pixelColor.a, COLOR_DARK_GREEN.a);
     }
 }
 
@@ -127,7 +107,7 @@ TEST_F(ImageTests, InitializeWithColor) {
 
     const odr::ImageDimensions dimensions{ 60, 40 };
 
-    const bool isInitialized = imgLightGreen.Initialize(dimensions, odr::COLOR_LIGHT_GREEN);
+    const bool isInitialized = imgLightGreen.Initialize(dimensions, COLOR_LIGHT_GREEN);
     ASSERT_TRUE(isInitialized);
 
     ASSERT_EQ(imgLightGreen.GetDimensions(), dimensions);
@@ -137,7 +117,7 @@ TEST_F(ImageTests, InitializeWithColor) {
             const odr::PixelCoordinates PixelCoordinates {left, top};
             const odr::PixelColor pixelColor = imgLightGreen.GetColor(PixelCoordinates);
 
-            ASSERT_EQ(pixelColor, odr::COLOR_LIGHT_GREEN);
+            ASSERT_EQ(pixelColor, COLOR_LIGHT_GREEN);
         }
     }
 }

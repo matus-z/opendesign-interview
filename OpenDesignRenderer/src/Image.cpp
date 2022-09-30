@@ -10,15 +10,8 @@
 #include "RgbaBitmap.h"
 
 
-#define READ_BIG_ENDIAN_UINT32(ptr)         (*ptr << 24 | *(ptr+1) << 16 | *(ptr+2)<<8 | *(ptr+3))
-#define WRITE_BIG_ENDIAN_UINT32(ptr, u32)   *ptr = (u32 >> 24) & 0xFF; \
-                                            *(ptr+1) = (u32 >> 16) & 0xFF; \
-                                            *(ptr+2) = (u32 >> 8) & 0xFF; \
-                                            *(ptr+3) = u32 & 0xFF;
-
-
 odr::Image::Image() :
-    dimensions({0,0}),
+    dimensions(IMAGE_DIMENSIONS_EMPTY),
     imageBuffer(nullptr) {
 }
 
@@ -36,8 +29,7 @@ bool odr::Image::IsInitialized() const {
 }
 
 void odr::Image::Clear() {
-    dimensions.width = 0;
-    dimensions.height = 0;
+    dimensions = IMAGE_DIMENSIONS_EMPTY;
 
     if (imageBuffer != nullptr) {
         free(imageBuffer);
@@ -137,10 +129,17 @@ const odr::ImageDimensions& odr::Image::GetDimensions() const {
 
 odr::PixelColor odr::Image::GetColor(const PixelCoordinates& coords) const {
     if (coords.left >= dimensions.width || coords.top >= dimensions.height) {
-        return PixelColor{ 0 };
+        return COLOR_TRANSPARENT;
     }
 
-    return PixelColor{ static_cast<uint32_t>(READ_BIG_ENDIAN_UINT32(&imageBuffer[(coords.left + coords.top * dimensions.width) * 4])) };
+    const uint32_t imageBufferPos = (coords.left + coords.top * dimensions.width) * 4;
+
+    const unsigned char r = imageBuffer[imageBufferPos + 0];
+    const unsigned char g = imageBuffer[imageBufferPos + 1];
+    const unsigned char b = imageBuffer[imageBufferPos + 2];
+    const unsigned char a = imageBuffer[imageBufferPos + 3];
+
+    return PixelColor{ r, g, b, a };
 }
 
 bool odr::Image::SetColor(const PixelColor& color, const PixelCoordinates& coords) {
@@ -148,7 +147,13 @@ bool odr::Image::SetColor(const PixelColor& color, const PixelCoordinates& coord
         return false;
     }
 
-    WRITE_BIG_ENDIAN_UINT32(&imageBuffer[(coords.left + coords.top * dimensions.width) * 4], color.colorRGBA);
+    const uint32_t imageBufferPos = (coords.left + coords.top * dimensions.width) * 4;
+
+    imageBuffer[imageBufferPos + 0] = color.r;
+    imageBuffer[imageBufferPos + 1] = color.g;
+    imageBuffer[imageBufferPos + 2] = color.b;
+    imageBuffer[imageBufferPos + 3] = color.a;
+
     return true;
 }
 
@@ -171,7 +176,7 @@ bool odr::Image::operator==(const Image& other) const {
 odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
     Image scaledImage;
 
-    const bool isInitialized = scaledImage.Initialize(newDimensions, TRANSPARENT_COLOR);
+    const bool isInitialized = scaledImage.Initialize(newDimensions, COLOR_TRANSPARENT);
     if (!isInitialized) {
         return scaledImage;
     }

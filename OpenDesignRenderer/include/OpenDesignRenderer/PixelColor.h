@@ -5,17 +5,19 @@
 namespace odr {
 //! Pixel color in RGBA format.
 struct PixelColor {
-    uint32_t colorRGBA;
+    unsigned char r;
+    unsigned char g;
+    unsigned char b;
+    unsigned char a;
 
-    unsigned char R() const;
-    unsigned char G() const;
-    unsigned char B() const;
-    unsigned char A() const;
+    uint32_t RGBA() const;
 
     //! Detect if other color is identical to this one.
     bool operator==(const PixelColor& other) const;
+
+    //! Linearly interpolate two colors.
+    static PixelColor Interpolate(const PixelColor& color0, const PixelColor& color1, float t);
 };
 //! PixelColor presets
-constexpr PixelColor TRANSPARENT_COLOR{ 0 };
-constexpr PixelColor COLOR_LIGHT_GREEN{ 1894805632 };
+constexpr PixelColor COLOR_TRANSPARENT{ 0, 0, 0, 0 };
 }

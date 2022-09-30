@@ -16,4 +16,6 @@ struct ImageDimensions {
     bool operator==(const ImageDimensions& other) const;
     bool operator!=(const ImageDimensions& other) const;
 };
+//! ImageDimensions presets
+constexpr ImageDimensions IMAGE_DIMENSIONS_EMPTY{ 0, 0 };
 }

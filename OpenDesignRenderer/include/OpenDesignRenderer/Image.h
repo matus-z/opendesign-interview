@@ -51,7 +51,7 @@ public:
 
 private:
     //! Image dimensions - width and height.
-    ImageDimensions dimensions;
+    ImageDimensions dimensions = IMAGE_DIMENSIONS_EMPTY;
     //! Image data buffer.
     unsigned char* imageBuffer = nullptr;
 };

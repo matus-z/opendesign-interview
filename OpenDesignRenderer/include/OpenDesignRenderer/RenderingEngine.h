@@ -2,6 +2,7 @@
 
 #include <OpenDesignRenderer/Image.h>
 
+
 namespace odr {
 //! Simple 2D rendering engine.
 class RenderingEngine {
