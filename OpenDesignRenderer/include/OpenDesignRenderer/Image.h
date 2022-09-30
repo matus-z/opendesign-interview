@@ -3,12 +3,12 @@
 #include <string>
 
 #include <OpenDesignRenderer/ImageDimensions.h>
+#include <OpenDesignRenderer/PixelCoordinates.h>
 
 
 // Forward declarations
 namespace odr {
 struct PixelColor;
-struct PixelCoordinates;
 }
 
 namespace odr {

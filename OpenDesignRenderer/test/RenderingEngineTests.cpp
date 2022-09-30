@@ -49,7 +49,7 @@ TEST_F(RenderingEngineTests, DrawRectangle) {
     const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
-    const odr::PixelCoordinates rectanglePosition{ 50, 50 };
+    const odr::PixelCoordinatesUnbounded rectanglePosition{ 50, 50 };
     const odr::ImageDimensions rectangleDimensions{ 200, 100 };
     const bool isRectangleDrawn = engine.DrawRectangle(rectanglePosition, rectangleDimensions, COLOR_LIGHT_GREEN, 0, COLOR_LIGHT_GREEN);
     ASSERT_TRUE(isRectangleDrawn);
@@ -85,7 +85,7 @@ TEST_F(RenderingEngineTests, DrawRectangleInnerStroke) {
     const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
-    const odr::PixelCoordinates rectanglePosition{ 8, 8 };
+    const odr::PixelCoordinatesUnbounded rectanglePosition{ 8, 8 };
     const odr::ImageDimensions rectangleDimensions{ 624, 464 };
     const uint32_t strokeWidth = 24;
     const bool isRectangleDrawn = engine.DrawRectangle(rectanglePosition, rectangleDimensions, COLOR_LIGHT_GREEN, strokeWidth, COLOR_DARK_RED);
@@ -131,12 +131,12 @@ TEST_F(RenderingEngineTests, DrawRectangleBlend) {
     const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
-    const odr::PixelCoordinates greenRectanglePosition{ 50, 50 };
+    const odr::PixelCoordinatesUnbounded greenRectanglePosition{ 50, 50 };
     const odr::ImageDimensions greenRectangleDimensions{ 200, 100 };
     const bool isGreenRectangleDrawn = engine.DrawRectangle(greenRectanglePosition, greenRectangleDimensions, COLOR_LIGHT_GREEN, 0, COLOR_LIGHT_GREEN);
     ASSERT_TRUE(isGreenRectangleDrawn);
 
-    const odr::PixelCoordinates redRectanglePosition{ 200, 100 };
+    const odr::PixelCoordinatesUnbounded redRectanglePosition{ 200, 100 };
     const odr::ImageDimensions redRectangleDimensions{ 100, 20 };
     const bool isRedRectangleDrawn = engine.DrawRectangle(redRectanglePosition, redRectangleDimensions, COLOR_DARK_RED, 0, COLOR_DARK_RED);
     ASSERT_TRUE(isRedRectangleDrawn);
@@ -189,7 +189,7 @@ TEST_F(RenderingEngineTests, DrawImage) {
     const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
-    const odr::PixelCoordinates imgPosition{ 20, 20 };
+    const odr::PixelCoordinatesUnbounded imgPosition{ 20, 20 };
     const odr::ImageDimensions imgDimensions{ 200, 100 };
     const bool isImgDrawn = engine.Draw(imgA, imgPosition, imgDimensions);
     ASSERT_TRUE(isImgDrawn);
@@ -205,6 +205,10 @@ TEST_F(RenderingEngineTests, DrawImage) {
 TEST_F(RenderingEngineTests, DrawComposite) {
     odr::RenderingEngine engine;
 
+    odr::Image imgA;
+    const bool isImgALoaded = imgA.Load(std::string(TESTING_IMAGES_DIR) + "image-A.rgba");
+    ASSERT_TRUE(isImgALoaded);
+
     odr::Image imgB;
     const bool isImgBLoaded = imgB.Load(std::string(TESTING_IMAGES_DIR) + "image-B.rgba");
     ASSERT_TRUE(isImgBLoaded);
@@ -218,20 +222,26 @@ TEST_F(RenderingEngineTests, DrawComposite) {
     ASSERT_TRUE(isBufferInitialized);
 
     {
-        const odr::PixelCoordinates rectanglePosition{ 8, 8 };
+        const odr::PixelCoordinatesUnbounded imgPosition{ -40, 60 };
+        const odr::ImageDimensions imgDimensions{ 720, 360 };
+        const bool isImgDrawn = engine.Draw(imgA, imgPosition, imgDimensions);
+        ASSERT_TRUE(isImgDrawn);
+    }
+    {
+        const odr::PixelCoordinatesUnbounded rectanglePosition{ 8, 8 };
         const odr::ImageDimensions rectangleDimensions{ 624, 464 };
         const uint32_t strokeWidth = 24;
         const bool isRectangleDrawn = engine.DrawRectangle(rectanglePosition, rectangleDimensions, COLOR_TRANSPARENT_BLUE, strokeWidth, COLOR_GB_40);
         ASSERT_TRUE(isRectangleDrawn);
     }
     {
-        const odr::PixelCoordinates imgPosition{ 0, 0 };
+        const odr::PixelCoordinatesUnbounded imgPosition{ 0, 0 };
         const odr::ImageDimensions imgDimensions{ 640, 480 };
         const bool isImgDrawn = engine.Draw(imgB, imgPosition, imgDimensions);
         ASSERT_TRUE(isImgDrawn);
     }
     {
-        const odr::PixelCoordinates imgPosition{ 0, 0 };
+        const odr::PixelCoordinatesUnbounded imgPosition{ 0, 0 };
         const odr::ImageDimensions imgDimensions{ 256, 256 };
         const bool isImgDrawn = engine.Draw(imgC, imgPosition, imgDimensions);
         ASSERT_TRUE(isImgDrawn);

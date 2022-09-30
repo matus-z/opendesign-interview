@@ -4,7 +4,6 @@
 #include <sstream>
 #include <cmath>
 
-#include <OpenDesignRenderer/PixelCoordinates.h>
 #include <OpenDesignRenderer/PixelColor.h>
 
 #include "RgbaBitmap.h"

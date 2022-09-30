@@ -17,11 +17,11 @@ public:
     //! Draw an image to the specified position on the frame buffer.
     bool Draw(
         const Image& image,
-        const PixelCoordinates& position,
+        const PixelCoordinatesUnbounded& position,
         const ImageDimensions& dimensions);
     //! Draw a rectangle to the specified position on the frame buffer.
     bool DrawRectangle(
-        const PixelCoordinates& position,
+        const PixelCoordinatesUnbounded& position,
         const ImageDimensions& dimensions,
         const PixelColor& fillColor,
         uint32_t innerStrokeWidth,

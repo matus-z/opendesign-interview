@@ -16,22 +16,22 @@ bool odr::RenderingEngine::CopyFrameBuffer(Image& image) const {
 
 bool odr::RenderingEngine::Draw(
     const Image& image,
-    const PixelCoordinates& position,
+    const PixelCoordinatesUnbounded& position,
     const ImageDimensions& dimensions) {
     const Image scaledImage = image.Scaled(dimensions);
 
     const ImageDimensions& frameBufferDimensions = frameBuffer.GetDimensions();
 
-    const uint32_t imgLeft = std::max(position.left, 0u);
-    const uint32_t imgRight = std::min(dimensions.width + position.left, frameBufferDimensions.width);
-    const uint32_t imgTop = std::max(position.top, 0u);
-    const uint32_t imgBottom = std::min(dimensions.height + position.top, frameBufferDimensions.height);
+    const uint32_t fbLeft = std::max(position.left, 0);
+    const uint32_t fbRight = std::min(dimensions.width + position.left, frameBufferDimensions.width);
+    const uint32_t fbTop = std::max(position.top, 0);
+    const uint32_t fbBottom = std::min(dimensions.height + position.top, frameBufferDimensions.height);
 
-    // For each pixel in the image that fits to the frame buffer
-    for (uint32_t y = imgTop; y < imgBottom; y++) {
-        for (uint32_t x = imgLeft; x < imgRight; x++) {
-            const PixelCoordinates imageCoords{ x, y };
-            const PixelCoordinates frameBufferCoordinates{ x + position.left, y + position.top };
+    // For each pixel in the frame buffer where the image will be drawn
+    for (uint32_t y = fbTop; y < fbBottom; y++) {
+        for (uint32_t x = fbLeft; x < fbRight; x++) {
+            const PixelCoordinates imageCoords{ x - position.left, y - position.top };
+            const PixelCoordinates frameBufferCoordinates{ x, y };
 
             const PixelColor imageColor = scaledImage.GetColor(imageCoords);
             const PixelColor frameBufferColor = frameBuffer.GetColor(frameBufferCoordinates);
@@ -48,21 +48,21 @@ bool odr::RenderingEngine::Draw(
 }
 
 bool odr::RenderingEngine::DrawRectangle(
-    const PixelCoordinates& position,
+    const PixelCoordinatesUnbounded& position,
     const ImageDimensions& dimensions,
     const PixelColor& fillColor,
     uint32_t innerStrokeWidth,
     const PixelColor& strokeColor) {
     const ImageDimensions& frameBufferDimensions = frameBuffer.GetDimensions();
 
-    const uint32_t rectLeft = std::max(position.left, 0u);
-    const uint32_t rectRight = std::min(dimensions.width + position.left, frameBufferDimensions.width);
-    const uint32_t rectTop = std::max(position.top, 0u);
-    const uint32_t rectBottom = std::min(dimensions.height + position.top, frameBufferDimensions.height);
+    const uint32_t fbLeft = std::max(position.left, 0);
+    const uint32_t fbRight = std::min(dimensions.width + position.left, frameBufferDimensions.width);
+    const uint32_t fbTop = std::max(position.top, 0);
+    const uint32_t fbBottom = std::min(dimensions.height + position.top, frameBufferDimensions.height);
 
-    // For each pixel in the rectangle that fits to the frame buffer
-    for (uint32_t y = rectTop; y < rectBottom; y++) {
-        for (uint32_t x = rectLeft; x < rectRight; x++) {
+    // For each pixel in the frame buffer where the image will be drawn
+    for (uint32_t y = fbTop; y < fbBottom; y++) {
+        for (uint32_t x = fbLeft; x < fbRight; x++) {
             const PixelCoordinates rectangleCoords{ x - position.left, y - position.top };
             const PixelCoordinates frameBufferCoordinates{ x, y };
 
