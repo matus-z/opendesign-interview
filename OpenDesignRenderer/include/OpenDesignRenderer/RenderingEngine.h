@@ -7,13 +7,25 @@ namespace odr {
 //! Simple 2D rendering engine.
 class RenderingEngine {
 public:
-    explicit RenderingEngine();
+    explicit RenderingEngine() = default;
 
-    // void SetFrameBuffer(uint32_t width, uint32_t height);
-    // void Draw(const Image& image, uint32_t left, uint32_t top, uint32_t width, uint32_t height);
-    // void DrawRectangle(uint32_t left, uint32_t top, uint32_t width, uint32_t height, char fillFolor, float alpha, uint32_t innerStrokeWidth, char innerStrokeColor, float innerStrokeAlpha);
+    //! Initialize frame buffer to the specified dimensions.
+    bool SetFrameBuffer(const ImageDimensions& dimensions);
+    //! Copy frame buffer to image.
+    bool CopyFrameBuffer(Image& image) const;
 
-    // void CopyFrameBuffer(Image& image);
+    //! Draw an image to the specified position on the frame buffer.
+    bool Draw(
+        const Image& image,
+        const PixelCoordinates& position,
+        const ImageDimensions& dimensions);
+    //! Draw a rectangle to the specified position on the frame buffer.
+    bool DrawRectangle(
+        const PixelCoordinates& position,
+        const ImageDimensions& dimensions,
+        const PixelColor& fillColor,
+        uint32_t innerStrokeWidth,
+        const PixelColor& strokeColor);
 
 private:
     Image frameBuffer;
