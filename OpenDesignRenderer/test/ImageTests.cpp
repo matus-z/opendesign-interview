@@ -112,8 +112,8 @@ TEST_F(ImageTests, InitializeWithColor) {
 
     ASSERT_EQ(imgLightGreen.GetDimensions(), dimensions);
 
-    for (uint32_t left = 0; left < dimensions.width; left++) {
-        for (uint32_t top = 0; top < dimensions.height; top++) {
+    for (uint32_t top = 0; top < dimensions.height; top++) {
+        for (uint32_t left = 0; left < dimensions.width; left++) {
             const odr::PixelCoordinates PixelCoordinates {left, top};
             const odr::PixelColor pixelColor = imgLightGreen.GetColor(PixelCoordinates);
 
