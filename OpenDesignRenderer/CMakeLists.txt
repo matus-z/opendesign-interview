@@ -18,6 +18,7 @@ set(PROJECT_SOURCE_FILES
     ${CMAKE_SOURCE_DIR}/src/PixelColor.cpp
     ${CMAKE_SOURCE_DIR}/src/PixelCoordinates.cpp
     ${CMAKE_SOURCE_DIR}/src/RenderingEngine.cpp
+    ${CMAKE_SOURCE_DIR}/src/RgbaBitmap.cpp
 )
 
 # Test source files
