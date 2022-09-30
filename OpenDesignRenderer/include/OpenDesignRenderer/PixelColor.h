@@ -17,6 +17,8 @@ struct PixelColor {
 
     //! Linearly interpolate two colors.
     static PixelColor Interpolate(const PixelColor& color0, const PixelColor& color1, float t);
+    //! Blend color over background.
+    static PixelColor Blend(const PixelColor& bgColor, const PixelColor& fgColor);
 };
 //! PixelColor presets
 constexpr PixelColor COLOR_TRANSPARENT{ 0, 0, 0, 0 };
