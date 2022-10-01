@@ -102,7 +102,7 @@ TEST_F(ImageTests, SetColor) {
     }
 }
 
-TEST_F(ImageTests, InitializeWithColor) {
+TEST_F(ImageTests, Initialize) {
     odr::Image imgLightGreen;
 
     const odr::ImageDimensions dimensions{ 60, 40 };
@@ -122,7 +122,7 @@ TEST_F(ImageTests, InitializeWithColor) {
     }
 }
 
-TEST_F(ImageTests, InitializeAsCopy) {
+TEST_F(ImageTests, CloneFrom) {
     odr::Image imgA;
 
     const bool isImgALoaded = imgA.Load(std::string(TESTING_IMAGES_DIR) + "image-A.rgba");
@@ -130,7 +130,7 @@ TEST_F(ImageTests, InitializeAsCopy) {
 
     odr::Image imgACopy;
 
-    const bool isCopied = imgACopy.Initialize(imgA);
+    const bool isCopied = imgACopy.CloneFrom(imgA);
     ASSERT_TRUE(isCopied);
 
     ASSERT_EQ(imgA, imgACopy);

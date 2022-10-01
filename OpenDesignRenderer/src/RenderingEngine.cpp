@@ -6,12 +6,12 @@
 #include <OpenDesignRenderer/PixelColor.h>
 
 
-bool odr::RenderingEngine::SetFrameBuffer(const ImageDimensions& dimensions) {
+bool odr::RenderingEngine::InitializeFrameBuffer(const ImageDimensions& dimensions) {
     return frameBuffer.Initialize(dimensions, COLOR_TRANSPARENT);
 }
 
-bool odr::RenderingEngine::CopyFrameBuffer(Image& image) const {
-    return image.Initialize(frameBuffer);
+bool odr::RenderingEngine::Render(Image& image) const {
+    return image.CloneFrom(frameBuffer);
 }
 
 bool odr::RenderingEngine::Draw(

@@ -25,11 +25,11 @@ TEST_F(RenderingEngineTests, InitializeTransparent) {
     odr::RenderingEngine engine;
 
     const odr::ImageDimensions frameBufferDimensions{ 800, 500 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     ASSERT_EQ(renderedImage.GetDimensions(), frameBufferDimensions);
@@ -46,7 +46,7 @@ TEST_F(RenderingEngineTests, DrawRectangle) {
     odr::RenderingEngine engine;
 
     const odr::ImageDimensions frameBufferDimensions{ 800, 500 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     const odr::PixelCoordinatesUnbounded rectanglePosition{ 50, 50 };
@@ -55,7 +55,7 @@ TEST_F(RenderingEngineTests, DrawRectangle) {
     ASSERT_TRUE(isRectangleDrawn);
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     const bool isImgSaved = renderedImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-rectangle_800x500.rgba");
@@ -82,7 +82,7 @@ TEST_F(RenderingEngineTests, DrawRectangleInnerStroke) {
     odr::RenderingEngine engine;
 
     const odr::ImageDimensions frameBufferDimensions{ 640, 480 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     const odr::PixelCoordinatesUnbounded rectanglePosition{ 8, 8 };
@@ -92,7 +92,7 @@ TEST_F(RenderingEngineTests, DrawRectangleInnerStroke) {
     ASSERT_TRUE(isRectangleDrawn);
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     const bool isImgSaved = renderedImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-rectangle-innerstroke_640x480.rgba");
@@ -128,7 +128,7 @@ TEST_F(RenderingEngineTests, DrawRectangleBlend) {
     odr::RenderingEngine engine;
 
     const odr::ImageDimensions frameBufferDimensions{ 800, 500 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     const odr::PixelCoordinatesUnbounded greenRectanglePosition{ 50, 50 };
@@ -142,7 +142,7 @@ TEST_F(RenderingEngineTests, DrawRectangleBlend) {
     ASSERT_TRUE(isRedRectangleDrawn);
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     const auto colorBlended = odr::PixelColor::Blend(COLOR_LIGHT_GREEN, COLOR_DARK_RED);
@@ -186,7 +186,7 @@ TEST_F(RenderingEngineTests, DrawImage) {
     ASSERT_TRUE(isImgALoaded);
 
     const odr::ImageDimensions frameBufferDimensions{ 800, 500 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     const odr::PixelCoordinatesUnbounded imgPosition{ 20, 20 };
@@ -195,7 +195,7 @@ TEST_F(RenderingEngineTests, DrawImage) {
     ASSERT_TRUE(isImgDrawn);
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     const bool isImgSaved = renderedImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-image_800x500.rgba");
@@ -218,7 +218,7 @@ TEST_F(RenderingEngineTests, DrawComposite) {
     ASSERT_TRUE(isImgCLoaded);
 
     const odr::ImageDimensions frameBufferDimensions{ 640, 480 };
-    const bool isBufferInitialized = engine.SetFrameBuffer(frameBufferDimensions);
+    const bool isBufferInitialized = engine.InitializeFrameBuffer(frameBufferDimensions);
     ASSERT_TRUE(isBufferInitialized);
 
     {
@@ -248,7 +248,7 @@ TEST_F(RenderingEngineTests, DrawComposite) {
     }
 
     odr::Image renderedImage;
-    const bool isRendered = engine.CopyFrameBuffer(renderedImage);
+    const bool isRendered = engine.Render(renderedImage);
     ASSERT_TRUE(isRendered);
 
     const bool isImgSaved = renderedImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-composite_640x480.rgba");

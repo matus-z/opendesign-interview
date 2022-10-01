@@ -62,7 +62,7 @@ bool odr::Image::Initialize(const ImageDimensions& dimensions_, const PixelColor
     return true;
 }
 
-bool odr::Image::Initialize(const Image& otherImage) {
+bool odr::Image::CloneFrom(const Image& otherImage) {
     Clear();
 
     dimensions = otherImage.GetDimensions();
@@ -176,7 +176,7 @@ odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
     Image scaledImage;
 
     if (dimensions == newDimensions) {
-        scaledImage.Initialize(*this);
+        scaledImage.CloneFrom(*this);
         return scaledImage;
     }
 

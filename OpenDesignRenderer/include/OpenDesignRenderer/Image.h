@@ -27,8 +27,8 @@ public:
     void Clear();
     //! Initialize an image with the specified dimensions and color.
     bool Initialize(const ImageDimensions& dimensions, const PixelColor& color);
-    //! Initialize - perform a deep copy of the other image and its data.
-    bool Initialize(const Image& otherImage);
+    //! Clone from the specified other image - perform a deep copy of the other image and its data.
+    bool CloneFrom(const Image& otherImage);
 
     //! Load image from an RGBA file on the filesystem.
     bool Load(const std::string& filepath);

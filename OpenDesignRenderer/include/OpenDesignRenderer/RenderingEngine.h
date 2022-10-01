@@ -10,9 +10,9 @@ public:
     explicit RenderingEngine() = default;
 
     //! Initialize frame buffer to the specified dimensions.
-    bool SetFrameBuffer(const ImageDimensions& dimensions);
-    //! Copy frame buffer to image.
-    bool CopyFrameBuffer(Image& image) const;
+    bool InitializeFrameBuffer(const ImageDimensions& dimensions);
+    //! Render frame buffer to image.
+    bool Render(Image& image) const;
 
     /*!
         \brief Draw an image to the specified position on the frame buffer.
@@ -24,6 +24,7 @@ public:
         const Image& image,
         const PixelCoordinatesUnbounded& imagePosition,
         const ImageDimensions& imageDimensions);
+
     /*!
         \brief Draw a rectangle to the specified position on the frame buffer.
         \param rectanglePosition The position in the frame buffer where the rectangle will be drawn.
