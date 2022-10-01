@@ -188,20 +188,47 @@ odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
     const float scalingFactorX = static_cast<float>(newDimensions.width) / static_cast<float>(dimensions.width);
     const float scalingFactorY = static_cast<float>(newDimensions.height) / static_cast<float>(dimensions.height);
 
-    // TODO: Use bilinear interpolation to resample instead of taking the nearest pixel color
+    const uint32_t boxWidth = static_cast<uint32_t>(std::ceil(1.0f / scalingFactorX));
+    const uint32_t boxHeight = static_cast<uint32_t>(std::ceil(1.0f / scalingFactorY));
+    const uint32_t boxSize = boxWidth * boxHeight;
+    const float boxSizeF = static_cast<float>(boxSize);
+
+    // Compute new colors for each pixel in the new image
     for (uint32_t top = 0; top < newDimensions.height; top++) {
         for (uint32_t left = 0; left < newDimensions.width; left++) {
             const float oldXF = static_cast<float>(left) / scalingFactorX;
             const float oldYF = static_cast<float>(top) / scalingFactorY;
 
-            const uint32_t oldX = static_cast<uint32_t>(std::round(oldXF));
-            const uint32_t oldY = static_cast<uint32_t>(std::round(oldYF));
+            // Box sampling
+            const uint32_t xBeg = static_cast<uint32_t>(oldXF);
+            const uint32_t yBeg = static_cast<uint32_t>(oldYF);
+            const uint32_t xEnd = std::min(xBeg + boxWidth, dimensions.width);
+            const uint32_t yEnd = std::min(yBeg + boxHeight, dimensions.height);
 
-            const PixelCoordinates oldNearestPixelCoordinats{ oldX, oldY };
+            float rSum = 0.0f;
+            float gSum = 0.0f;
+            float bSum = 0.0f;
+            float aSum = 0.0f;
+
+            for (uint32_t y = yBeg; y < yEnd; y++) {
+                for (uint32_t x = xBeg; x < xEnd; x++) {
+                    const PixelColor color = GetColor(PixelCoordinates {x, y});
+                    const float alphaF = static_cast<float>(color.a) / 255.0;
+                    rSum += static_cast<float>(color.r) * alphaF;
+                    gSum += static_cast<float>(color.g) * alphaF;
+                    bSum += static_cast<float>(color.b) * alphaF;
+                    aSum += color.a;
+                }
+            }
+
+            const PixelColor newPixelColor = PixelColor {
+                static_cast<unsigned char>(std::round(rSum / boxSizeF)),
+                static_cast<unsigned char>(std::round(gSum / boxSizeF)),
+                static_cast<unsigned char>(std::round(bSum / boxSizeF)),
+                static_cast<unsigned char>(std::round(aSum / boxSizeF)),
+            };
 
             const PixelCoordinates newPixelCoordinates{ left, top };
-            const PixelColor newPixelColor = GetColor(oldNearestPixelCoordinats);
-
             const bool isSet = scaledImage.SetColor(newPixelColor, newPixelCoordinates);
             if (!isSet) {
                 return scaledImage;
