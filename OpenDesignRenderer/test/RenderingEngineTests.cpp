@@ -10,8 +10,6 @@
 namespace {
 constexpr odr::PixelColor COLOR_LIGHT_GREEN{ 0x70, 0xF0, 0x70, 0x80 };
 constexpr odr::PixelColor COLOR_DARK_RED{ 0xF0, 0x30, 0x30, 0x80 };
-constexpr odr::PixelColor COLOR_TRANSPARENT_BLUE{ 0x00, 0x00, 0xFF, 0x20 };
-constexpr odr::PixelColor COLOR_GB_40{ 0x00, 0x40, 0x40, 0xFF };
 }
 
 //! RenderingEngine class tests.
@@ -71,7 +69,8 @@ TEST_F(RenderingEngineTests, DrawRectangle) {
                 y >= rectanglePosition.top &&
                 y < rectanglePosition.top + rectangleDimensions.height) {
                 ASSERT_EQ(pixelColor, COLOR_LIGHT_GREEN);
-            } else {
+            }
+            else {
                 ASSERT_EQ(pixelColor, odr::COLOR_TRANSPARENT);
             }
         }
@@ -102,7 +101,7 @@ TEST_F(RenderingEngineTests, DrawRectangleInnerStroke) {
         for (uint32_t x = 0u; x < frameBufferDimensions.width; x++) {
             const odr::PixelColor pixelColor = renderedImage.GetColor(odr::PixelCoordinates{ x, y });
 
-            const bool isInRectangle = 
+            const bool isInRectangle =
                 x >= rectanglePosition.left &&
                 x < rectanglePosition.left + rectangleDimensions.width &&
                 y >= rectanglePosition.top &&
@@ -115,9 +114,11 @@ TEST_F(RenderingEngineTests, DrawRectangleInnerStroke) {
 
             if (isInInnerRectangle) {
                 ASSERT_EQ(pixelColor, COLOR_LIGHT_GREEN);
-            } else if (isInRectangle) {
+            }
+            else if (isInRectangle) {
                 ASSERT_EQ(pixelColor, COLOR_DARK_RED);
-            } else {
+            }
+            else {
                 ASSERT_EQ(pixelColor, odr::COLOR_TRANSPARENT);
             }
         }
@@ -164,11 +165,14 @@ TEST_F(RenderingEngineTests, DrawRectangleBlend) {
 
             if (isInGreenImage && isInRedImage) {
                 ASSERT_EQ(pixelColor, colorBlended);
-            } else if (isInGreenImage) {
+            }
+            else if (isInGreenImage) {
                 ASSERT_EQ(pixelColor, COLOR_LIGHT_GREEN);
-            } else if (isInRedImage) {
+            }
+            else if (isInRedImage) {
                 ASSERT_EQ(pixelColor, COLOR_DARK_RED);
-            } else {
+            }
+            else {
                 ASSERT_EQ(pixelColor, odr::COLOR_TRANSPARENT);
             }
         }
@@ -230,8 +234,10 @@ TEST_F(RenderingEngineTests, DrawComposite) {
     {
         const odr::PixelCoordinatesUnbounded rectanglePosition{ 8, 8 };
         const odr::ImageDimensions rectangleDimensions{ 624, 464 };
+        const odr::PixelColor fillColor = odr::PixelColor::RGBAlpha(0x00, 0x00, 0xFF, 12.5);
         const uint32_t strokeWidth = 24;
-        const bool isRectangleDrawn = engine.DrawRectangle(rectanglePosition, rectangleDimensions, COLOR_TRANSPARENT_BLUE, strokeWidth, COLOR_GB_40);
+        const odr::PixelColor strokeColor = odr::PixelColor::RGBAlpha(0x00, 0x40, 0x40, 100.0);
+        const bool isRectangleDrawn = engine.DrawRectangle(rectanglePosition, rectangleDimensions, fillColor, strokeWidth, strokeColor);
         ASSERT_TRUE(isRectangleDrawn);
     }
     {

@@ -10,7 +10,8 @@ struct PixelColor {
     unsigned char b;
     unsigned char a;
 
-    uint32_t RGBA() const;
+    //! Initialize PixelColor as RGB values with alpha as a percentage (a value between <0,100>).
+    static PixelColor RGBAlpha(unsigned char r, unsigned char g, unsigned char b, float alphaAsPercentage);
 
     //! Detect if other color is identical to this one.
     bool operator==(const PixelColor& other) const;

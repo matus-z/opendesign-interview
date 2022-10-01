@@ -49,7 +49,7 @@ bool odr::Image::Initialize(const ImageDimensions& dimensions_, const PixelColor
 
     for (uint32_t top = 0; top < dimensions.height; top++) {
         for (uint32_t left = 0; left < dimensions.width; left++) {
-            const PixelCoordinates PixelCoordinates {left, top};
+            const PixelCoordinates PixelCoordinates{ left, top };
             const bool isSet = SetColor(color, PixelCoordinates);
 
             if (!isSet) {
@@ -212,7 +212,7 @@ odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
 
             for (uint32_t y = yBeg; y < yEnd; y++) {
                 for (uint32_t x = xBeg; x < xEnd; x++) {
-                    const PixelColor color = GetColor(PixelCoordinates {x, y});
+                    const PixelColor color = GetColor(PixelCoordinates{ x, y });
                     const float alphaF = static_cast<float>(color.a) / 255.0;
                     rSum += static_cast<float>(color.r) * alphaF;
                     gSum += static_cast<float>(color.g) * alphaF;

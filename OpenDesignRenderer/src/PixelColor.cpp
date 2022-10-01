@@ -3,17 +3,32 @@
 #include <cmath>
 
 namespace {
-    float To01(unsigned char value) {
+    //! Convert an unsigned char value in the range <0, 255> to <0.0, 1.0>
+    inline float To01(unsigned char value) {
         return static_cast<float>(value) / 255.0;
     }
-    unsigned char To255(float value) {
-        return static_cast<unsigned char>(std::round(value * 255.0));
+    //! Convert a real number value in <0.0, 1.0> to <0, 255>.
+    inline unsigned char To255(float value) {
+        if (value <= 0.0f) {
+            return 0;
+        }
+        else if (value >= 1.0f) {
+            return 0xFF;
+        }
+        else {
+            return static_cast<unsigned char>(std::round(value * 255.0));
+        }
     }
 }
 
-uint32_t odr::PixelColor::RGBA() const {
-    const uint32_t colorUint = (r << 24 | g << 16 | b << 8 | a);
-    return colorUint;
+
+/*static*/ odr::PixelColor odr::PixelColor::RGBAlpha(unsigned char r, unsigned char g, unsigned char b, float alphaAsPercentage) {
+    return PixelColor {
+        r,
+        g,
+        b,
+        To255(alphaAsPercentage / 100.0f)
+    };
 }
 
 bool odr::PixelColor::operator==(const PixelColor& other) const {
@@ -27,9 +42,11 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
 /*static*/ odr::PixelColor odr::PixelColor::Interpolate(const PixelColor& color0, const PixelColor& color1, float t) {
     if (t <= 0) {
         return color0;
-    } else if (t >= 1) {
+    }
+    else if (t >= 1) {
         return color1;
-    } else {
+    }
+    else {
         const float r0 = static_cast<float>(color0.r);
         const float g0 = static_cast<float>(color0.g);
         const float b0 = static_cast<float>(color0.b);
@@ -56,7 +73,7 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
 
 /*static*/ odr::PixelColor odr::PixelColor::Blend(const PixelColor& bgColor, const PixelColor& fgColor) {
     if (fgColor.a <= 0 && bgColor.a <= 0) {
-        return PixelColor {
+        return PixelColor{
             To255((To01(bgColor.r) + To01(fgColor.r)) / 2.0f),
             To255((To01(bgColor.g) + To01(fgColor.g)) / 2.0f),
             To255((To01(bgColor.b) + To01(fgColor.b)) / 2.0f),
@@ -64,7 +81,8 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
         };
     } if (fgColor.a <= 0u) {
         return bgColor;
-    } else if (fgColor.a >= 255u || bgColor.a <= 0u) {
+    }
+    else if (fgColor.a >= 255u || bgColor.a <= 0u) {
         return fgColor;
     }
 
@@ -82,7 +100,7 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
     const float resa01 = fga01 + fga01inv * bga01;
     const float bga01xfga01inv = bga01 * fga01inv;
 
-    return PixelColor {
+    return PixelColor{
         To255((fgr01 * fga01 + bgr01 * bga01xfga01inv) / resa01),
         To255((fgg01 * fga01 + bgg01 * bga01xfga01inv) / resa01),
         To255((fgb01 * fga01 + bgb01 * bga01xfga01inv) / resa01),

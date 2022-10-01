@@ -12,8 +12,8 @@
                                             *(ptr+2) = (u32 >> 8) & 0xFF; \
                                             *(ptr+3) = u32 & 0xFF;
 
-/*static*/ unsigned char * odr::RgbaBitmap::EndcodeToFileData(
-    const unsigned char * input_buffer,
+/*static*/ unsigned char* odr::RgbaBitmap::EndcodeToFileData(
+    const unsigned char* input_buffer,
     uint32_t width,
     uint32_t height)
 {
@@ -24,7 +24,7 @@
     const uint32_t imageDataSize = width * height * 4;
     const uint32_t output_size = 12 + imageDataSize;
 
-    unsigned char * rgba_file = (unsigned char*)malloc(output_size);
+    unsigned char* rgba_file = (unsigned char*)malloc(output_size);
     if (!rgba_file) {
         return nullptr;
     }
@@ -38,11 +38,11 @@
     return rgba_file;
 }
 
-/*static*/ unsigned char * odr::RgbaBitmap::DecodeFromFileData(
-    const unsigned char * file_data,
+/*static*/ unsigned char* odr::RgbaBitmap::DecodeFromFileData(
+    const unsigned char* file_data,
     uint32_t file_data_length,
-    uint32_t * p_width,
-    uint32_t * p_height)
+    uint32_t* p_width,
+    uint32_t* p_height)
 {
     if (!file_data || !p_width || !p_height) {
         return nullptr;
@@ -66,7 +66,7 @@
         return nullptr;
     }
 
-    unsigned char * bitmap = (unsigned char*)malloc(imageDataSize);
+    unsigned char* bitmap = (unsigned char*)malloc(imageDataSize);
     if (!bitmap) {
         return nullptr;
     }

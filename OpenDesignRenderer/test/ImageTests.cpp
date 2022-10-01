@@ -41,7 +41,7 @@ TEST_F(ImageTests, GetColor) {
 
     // [0,0]
     {
-        const auto pixelColor = imgA.GetColor({0, 0});
+        const auto pixelColor = imgA.GetColor({ 0, 0 });
 
         ASSERT_EQ(pixelColor.r, 0xFF);
         ASSERT_EQ(pixelColor.g, 0xFF);
@@ -51,7 +51,7 @@ TEST_F(ImageTests, GetColor) {
 
     // [1,0]
     {
-        const auto pixelColor = imgA.GetColor({1, 0});
+        const auto pixelColor = imgA.GetColor({ 1, 0 });
 
         ASSERT_EQ(pixelColor.r, 0xFF);
         ASSERT_EQ(pixelColor.g, 0xFF);
@@ -61,7 +61,7 @@ TEST_F(ImageTests, GetColor) {
 
     // [215, 170]
     {
-        const auto pixelColor = imgA.GetColor({215, 170});
+        const auto pixelColor = imgA.GetColor({ 215, 170 });
 
         ASSERT_EQ(pixelColor.r, 0x11);
         ASSERT_EQ(pixelColor.g, 0x01);
@@ -71,7 +71,7 @@ TEST_F(ImageTests, GetColor) {
 
     // [480, 150]
     {
-        const auto pixelColor = imgA.GetColor({480, 150});
+        const auto pixelColor = imgA.GetColor({ 480, 150 });
 
         ASSERT_EQ(pixelColor.r, 0xE7);
         ASSERT_EQ(pixelColor.g, 0xB4);
@@ -88,7 +88,7 @@ TEST_F(ImageTests, SetColor) {
 
     // [215, 170]
     {
-        const odr::PixelCoordinates PixelCoordinates {215, 170};
+        const odr::PixelCoordinates PixelCoordinates{ 215, 170 };
 
         const bool isColorWritten = imgA.SetColor(COLOR_DARK_GREEN, PixelCoordinates);
         ASSERT_TRUE(isColorWritten);
@@ -114,7 +114,7 @@ TEST_F(ImageTests, Initialize) {
 
     for (uint32_t top = 0; top < dimensions.height; top++) {
         for (uint32_t left = 0; left < dimensions.width; left++) {
-            const odr::PixelCoordinates PixelCoordinates {left, top};
+            const odr::PixelCoordinates PixelCoordinates{ left, top };
             const odr::PixelColor pixelColor = imgLightGreen.GetColor(PixelCoordinates);
 
             ASSERT_EQ(pixelColor, COLOR_LIGHT_GREEN);
