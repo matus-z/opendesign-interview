@@ -6,8 +6,8 @@ namespace {
     float To01(unsigned char value) {
         return static_cast<float>(value) / 255.0;
     }
-    char To255(float value) {
-        return static_cast<uint32_t>(std::round(value * 255.0));
+    unsigned char To255(float value) {
+        return static_cast<unsigned char>(std::round(value * 255.0));
     }
 }
 
@@ -55,22 +55,17 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
 }
 
 /*static*/ odr::PixelColor odr::PixelColor::Blend(const PixelColor& bgColor, const PixelColor& fgColor) {
-    PixelColor resultColor = COLOR_TRANSPARENT;
-
-    if (fgColor.a <= 0u) {
+    if (fgColor.a <= 0 && bgColor.a <= 0) {
+        return PixelColor {
+            To255((To01(bgColor.r) + To01(fgColor.r)) / 2.0f),
+            To255((To01(bgColor.g) + To01(fgColor.g)) / 2.0f),
+            To255((To01(bgColor.b) + To01(fgColor.b)) / 2.0f),
+            0
+        };
+    } if (fgColor.a <= 0u) {
         return bgColor;
     } else if (fgColor.a >= 255u || bgColor.a <= 0u) {
         return fgColor;
-    }
-
-    const float bga01 = To01(bgColor.a);
-    const float fga01 = To01(fgColor.a);
-    const float fga01inv = 1.0 - fga01;
-    const float resa01 = fga01 + fga01inv * bga01;
-
-    resultColor.a = To255(resa01);
-    if (resultColor.a == 0) {
-        return COLOR_TRANSPARENT;
     }
 
     const float bgr01 = To01(bgColor.r);
@@ -80,9 +75,17 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
     const float fgg01 = To01(fgColor.g);
     const float fgb01 = To01(fgColor.b);
 
-    resultColor.r = To255((fgr01 * fga01 + bgr01 * bga01 * fga01inv) / resa01);
-    resultColor.g = To255((fgg01 * fga01 + bgg01 * bga01 * fga01inv) / resa01);
-    resultColor.b = To255((fgb01 * fga01 + bgb01 * bga01 * fga01inv) / resa01);
+    const float bga01 = To01(bgColor.a);
+    const float fga01 = To01(fgColor.a);
+    const float fga01inv = 1.0 - fga01;
 
-    return resultColor;
+    const float resa01 = fga01 + fga01inv * bga01;
+    const float bga01xfga01inv = bga01 * fga01inv;
+
+    return PixelColor {
+        To255((fgr01 * fga01 + bgr01 * bga01xfga01inv) / resa01),
+        To255((fgg01 * fga01 + bgg01 * bga01xfga01inv) / resa01),
+        To255((fgb01 * fga01 + bgb01 * bga01xfga01inv) / resa01),
+        To255(resa01)
+    };
 }
