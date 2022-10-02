@@ -221,7 +221,7 @@ odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
                 }
             }
 
-            const PixelColor newPixelColor = PixelColor {
+            const PixelColor newPixelColor = PixelColor{
                 static_cast<unsigned char>(std::round(rSum / boxSizeF)),
                 static_cast<unsigned char>(std::round(gSum / boxSizeF)),
                 static_cast<unsigned char>(std::round(bSum / boxSizeF)),
@@ -237,4 +237,42 @@ odr::Image odr::Image::Scaled(const ImageDimensions& newDimensions) const {
     }
 
     return scaledImage;
+}
+
+/*static*/ odr::Image odr::Image::AbsoluteDiff(const Image& imageA, const Image& imageB) {
+    Image diffImage;
+
+    const ImageDimensions imageADims = imageA.GetDimensions();
+    const ImageDimensions imageBDims = imageB.GetDimensions();
+    const ImageDimensions diffImageDimensions{
+        std::max(imageADims.width, imageBDims.width),
+        std::max(imageADims.height, imageBDims.height)};
+
+    const bool isInitialized = diffImage.Initialize(diffImageDimensions, COLOR_TRANSPARENT);
+    if (!isInitialized) {
+        return diffImage;
+    }
+
+    for (uint32_t top = 0; top < diffImageDimensions.height; top++) {
+        for (uint32_t left = 0; left < diffImageDimensions.width; left++) {
+            const PixelCoordinates coords{ left, top };
+
+            const bool isPixelInImageA = top < imageADims.width && top < imageADims.height;
+            const bool isPixelInImageB = top < imageBDims.width && top < imageBDims.height;
+
+            if (!isPixelInImageA) {
+                diffImage.SetColor(imageB.GetColor(coords), coords);
+            } else if (!isPixelInImageB) {
+                diffImage.SetColor(imageA.GetColor(coords), coords);
+            } else {
+                const PixelColor pixelColorA = imageA.GetColor(coords);
+                const PixelColor pixelColorB = imageB.GetColor(coords);
+                const PixelColor pixelColorDiff = PixelColor::AbsoluteDiff(pixelColorA, pixelColorB);
+
+                diffImage.SetColor(pixelColorDiff, coords);
+            }
+        }
+    }
+
+    return diffImage;
 }

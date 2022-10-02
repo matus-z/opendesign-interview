@@ -259,4 +259,15 @@ TEST_F(RenderingEngineTests, DrawComposite) {
 
     const bool isImgSaved = renderedImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-composite_640x480.rgba");
     ASSERT_TRUE(isImgSaved);
+
+    // Compare the rendered composite image the example output image
+    {
+        odr::Image exampleOutputImage;
+        const bool isExampleOutputImageLoaded = exampleOutputImage.Load(std::string(TESTING_IMAGES_DIR) + "output-image.rgba");
+        ASSERT_TRUE(isExampleOutputImageLoaded);
+
+        const odr::Image diffImage = odr::Image::AbsoluteDiff(exampleOutputImage, renderedImage);
+        const bool isDiffImgSaved = diffImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-DIFF_640x480.rgba");
+        ASSERT_TRUE(isDiffImgSaved);
+    }
 }

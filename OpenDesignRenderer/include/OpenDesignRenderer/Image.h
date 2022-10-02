@@ -49,6 +49,9 @@ public:
     //! Construct a new image that is the result of scaling this image to new dimensions.
     Image Scaled(const ImageDimensions& newDimensions) const;
 
+    //! Comoute the absolute difference between two images.
+    static Image AbsoluteDiff(const Image& imageA, const Image& imageB);
+
 private:
     //! Image dimensions - width and height.
     ImageDimensions dimensions = IMAGE_DIMENSIONS_EMPTY;

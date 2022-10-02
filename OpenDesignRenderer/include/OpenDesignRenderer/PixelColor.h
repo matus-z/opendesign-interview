@@ -20,6 +20,8 @@ struct PixelColor {
     static PixelColor Interpolate(const PixelColor& color0, const PixelColor& color1, float t);
     //! Blend color over background.
     static PixelColor Blend(const PixelColor& bgColor, const PixelColor& fgColor);
+    //! Compute the absolute difference between two pixels.
+    static PixelColor AbsoluteDiff(const PixelColor& colorA, const PixelColor& colorB);
 };
 //! PixelColor presets
 constexpr PixelColor COLOR_TRANSPARENT{ 0, 0, 0, 0 };

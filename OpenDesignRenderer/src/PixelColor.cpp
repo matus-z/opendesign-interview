@@ -19,6 +19,12 @@ namespace {
             return static_cast<unsigned char>(std::round(value * 255.0));
         }
     }
+    //! Compute the absolute difference between unsigned chars.
+    inline unsigned char UCharAbsoluteDiff(unsigned char charA, unsigned char charB) {
+        return charA >= charB
+            ? charA - charB
+            : charB - charA;
+    }
 }
 
 
@@ -105,5 +111,14 @@ bool odr::PixelColor::operator==(const PixelColor& other) const {
         To255((fgg01 * fga01 + bgg01 * bga01xfga01inv) / resa01),
         To255((fgb01 * fga01 + bgb01 * bga01xfga01inv) / resa01),
         To255(resa01)
+    };
+}
+
+/*static*/ odr::PixelColor odr::PixelColor::AbsoluteDiff(const PixelColor& colorA, const PixelColor& colorB) {
+    return PixelColor {
+        UCharAbsoluteDiff(colorA.r, colorB.r),
+        UCharAbsoluteDiff(colorA.g, colorB.g),
+        UCharAbsoluteDiff(colorA.b, colorB.b),
+        UCharAbsoluteDiff(colorA.a, colorB.a)
     };
 }
