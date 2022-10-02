@@ -1,6 +1,12 @@
 # OpenDesign interview assignment - a simple 2D Renderer
 Coding Challenge for the **C++ Developer** position at **Ceros/OpenDesign** - http://labs.ceros.com/jobs/#/job/4423147.
+
 Source: https://github.com/matus-z/opendesign-interview.
+
+## Getting Started
+The **Renderer** is a simple `CMAKE` program.
+
+Open the `OpenDesignRenderer` directory and use the `CMakeLists.txt` to make and compile the **Renderer** library and the included test. The test will compile into an executable application that will verify the correctness of **Renderer**'s functionality.
 
 ## TODO
 Outside of the scope of this assignment are:
