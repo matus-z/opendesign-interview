@@ -270,4 +270,13 @@ TEST_F(RenderingEngineTests, DrawComposite) {
         const bool isDiffImgSaved = diffImage.Save(std::string(TESTING_IMAGES_DIR) + "tmp_image-rendered-diff_640x480.rgba");
         ASSERT_TRUE(isDiffImgSaved);
     }
+
+    // Compare the rendered composite image with the test rendered image
+    {
+        odr::Image testImage;
+        const bool isTestImageLoaded = testImage.Load(std::string(TESTING_IMAGES_DIR) + "test-image-composite_640x480.rgba");
+        ASSERT_TRUE(isTestImageLoaded);
+
+        ASSERT_EQ(testImage, renderedImage);
+    }
 }
