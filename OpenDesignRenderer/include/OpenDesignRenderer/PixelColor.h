@@ -16,8 +16,6 @@ struct PixelColor {
     //! Detect if other color is identical to this one.
     bool operator==(const PixelColor& other) const;
 
-    //! Linearly interpolate two colors.
-    static PixelColor Interpolate(const PixelColor& color0, const PixelColor& color1, float t);
     //! Blend color over background.
     static PixelColor Blend(const PixelColor& bgColor, const PixelColor& fgColor);
     //! Compute the absolute difference between two pixels.
